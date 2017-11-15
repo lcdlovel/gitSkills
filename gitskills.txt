@@ -1,0 +1,85 @@
+推荐网址：https://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/0013752340242354807e192f02a44359908df8a5643103a000
+1.Git简介
+	目前世界上最先进的分布式版本控制系统不但能自动帮我记录每次文件的改动，
+	还可以让同事协作编辑，这样就不用自己管理一堆类似的文件了，也不需要把文件
+	传来传去。如果想查看某次改动，只需要在软件里瞄一眼就可以
+
+2.安装Git
+	(1)首先，你可以试着输入git，看看系统有没有安装Git
+	(2)用Debian或Ubuntu Linux，通过一条sudo apt-get install git就可以
+	   直接完成Git的安装，非常简单。
+	(3)Windows下要使用很多Linux/Unix的工具时，需要Cygwin这样的模拟环境，
+	   Git也一样。Cygwin的安装和配置都比较复杂，就不建议你折腾了。不过，
+	   有高人已经把模拟环境和Git都打包好了，名叫msysgit，只需要下载一
+	   个单独的exe安装程序，其他什么也不用装，绝对好用。
+	(4) 安装完成后，还需要最后一步设置，在命令行输入：
+		git config --global user.name "Your Name"
+        git config --global user.email "email@example.com"
+		注意git config命令的--global参数，用了这个参数，表示你这
+		台机器上所有的Git仓库都会使用这个配置，
+		当然也可以对某个仓库指定不同的用户名和Email地址
+3.创建版本库
+	mkdir xxx 创建一个新的空目录
+	cd  xxx   进入这个空目录
+	pwd  显示这个目录的路径
+文件中添加版本库
+	git add xxx 把文件添加到仓库 (./ 全部文件)
+	git commit -m "xxx" 把文件提交到仓库 
+		(add 不同的文件 commit可以一次提交多个)
+	git status 时刻掌握仓库当前状况
+	git diff 显示修改内容
+	git log 显示从最近到最远的提交历史 commit id 是一个16进制的数
+	git log --pretty=oneline 不同版本提交各都显示在一行
+	git reflog 查看命令历史
+	git add命令实际上就是把提交的所有修改放到暂存区（Stage）
+	git commit 只负责把暂存区的修改提交的到master中
+4.版本回退和回归未来
+   HEAD 指向的版本就是当前版本
+	git reset --hard （1）commit—id 
+					 （2）HEAD^ 上次版本
+					 （3）HEAD^^ 上上次版本
+5.撤销修改
+	丢弃工作区
+		git checkout -- xxx 把文件在工作区的修改全部撤销掉
+		追回最近一次的git commit或git add的现状
+
+		git checkout xxx 切换到另一个分支
+	丢弃暂存区
+		（1）git reset HEAD file
+		（2）git checkout -- xxx
+
+	如果已经提交 则版本回归(前提是未推送到远程库中)
+
+	删除文件 git rm xxx 删除了一个文件(删除后需要提交一次)
+
+6.远程仓库
+	1.创建SSH Key
+		ssh-keygen -t rsa -C "youremail@example.com"
+		你需要把邮件地址换成你自己的邮件地址，然后一路回车，
+		使用默认值即可，由于这个Key也不是用于军事目的，所以也无需设置密码。
+		如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，
+		id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+
+	2.登陆GitHub，打开“Account settings”，“SSH Keys”页面：
+		然后，点“Add SSH Key”，填上任意Title，在Key文本框里
+		粘贴id_rsa.pub文件的内容：
+	3.git remote add origin git@github.com:michaelliao/learngit.git
+		添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，
+		但是origin这个名字一看就知道是远程库			
+	
+	4.git push -u origin master
+	把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。
+	由于远程库是空的，我们第一次推送master分支时，加上了-u参数，Git不但会把本地的master
+	分支内容推送的远程新的master分支，还会把本地的master分支和远程的master分
+	支关联起来，在以后的推送或者拉取时就可以简化命令。
+	
+	5. git push origin master
+	把本地master分支的最新修改推送至GitHub，现在，你就拥有了真正的分布式版本库！
+
+clone远程库
+	git clone git@github.com:michaelliao/gitskills.git 
+	注意把Git库的地址换成你自己的，然后进入gitskills目录看看，已经有README.md文件了。
+	Git支持多种协议，默认的git://使用ssh，但也可以使用https等其他协议。
+
+使用https除了速度慢以外，还有个最大的麻烦是每次推送都必须输入口令，但是在某些只开放
+http端口的公司内部就无法使用ssh协议而只能用https。
